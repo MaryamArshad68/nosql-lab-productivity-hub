@@ -28,31 +28,137 @@ const { connect } = require('./db/connection');
 
   // =============================================================================
   //  TODO: Insert your seed data below.
-  //
-  //  Hints:
-  //    - Hash passwords:   const hash = await bcrypt.hash('password123', 10);
-  //    - Capture inserted ids:
-  //        const u = await db.collection('users').insertOne({ ... });
-  //        const userId = u.insertedId;
-  //    - Use those ids when inserting projects/tasks/notes.
-  //    - Demonstrate schema flexibility: include at least one optional field
-  //      on SOME documents but not all (e.g. dueDate on some tasks only).
-  //
-  //  Sample task shape:
-  //    {
-  //      ownerId: <ObjectId>,
-  //      projectId: <ObjectId>,
-  //      title: "Write report introduction",
-  //      status: "todo",
-  //      priority: 3,
-  //      tags: ["writing", "urgent"],
-  //      subtasks: [
-  //        { title: "Outline sections", done: true },
-  //        { title: "Draft", done: false }
-  //      ],
-  //      createdAt: new Date()
-  //    }
   // =============================================================================
+// USERS
+const passwordHash = await bcrypt.hash('password123', 10);
+const u1 = await db.collection('users').insertOne({
+  name: "Maryam",
+  email: "maryam@test.com",
+  password: passwordHash,
+  createdAt: new Date()
+});
+const u2 = await db.collection('users').insertOne({
+  name: "Sheikh",
+  email: "sheikh@test.com",
+  password: passwordHash,
+  createdAt: new Date()
+});
+// PROJECTS
+const p1 = await db.collection('projects').insertOne({
+  name: "Web App",
+  ownerId: u1.insertedId
+});
+const p2 = await db.collection('projects').insertOne({
+  name: "db Project",
+  ownerId: u1.insertedId
+});
+const p3 = await db.collection('projects').insertOne({
+  name: "Mobile App",
+  ownerId: u2.insertedId
+});
+const p4 = await db.collection('projects').insertOne({
+  name: "AI",
+  ownerId: u2.insertedId
+});
+// TASKS 
+await db.collection('tasks').insertMany([
+  {
+    ownerId: u1.insertedId,
+    projectId: p1.insertedId,
+    title: "design database schema",
+    status: "todo",
+    priority: 1,
+    tags: ["db", "design"],
+    subtasks: [
+      { title: "identify entities", done: true },
+      { title: "draw ERD", done: false }
+    ],
+    createdAt: new Date()
+  },
+  {
+    ownerId: u1.insertedId,
+    projectId: p1.insertedId,
+    title: "Build API",
+    status: "in-progress",
+    priority: 2,
+    tags: ["backend"],
+    subtasks: [
+      { title: "Setup routes", done: false },
+      { title: "Connect DB", done: false }
+    ],
+    dueDate: new Date("2026-05-01"), 
+    createdAt: new Date()
+  },
+  {
+    ownerId: u1.insertedId,
+    projectId: p2.insertedId,
+    title: "Train model",
+    status: "todo",
+    priority: 3,
+    tags: ["ai"],
+    subtasks: [
+      { title: "Collect data", done: false }
+    ],
+    createdAt: new Date()
+  },
+  {
+    ownerId: u2.insertedId,
+    projectId: p3.insertedId,
+    title: "UI design",
+    status: "done",
+    priority: 2,
+    tags: ["ui", "frontend"],
+    subtasks: [
+      { title: "Wireframes", done: true }
+    ],
+    createdAt: new Date()
+  },
+  {
+    ownerId: u2.insertedId,
+    projectId: p4.insertedId,
+    title: "Literature review",
+    status: "todo",
+    priority: 1,
+    tags: ["research"],
+    subtasks: [
+      { title: "Find papers", done: false }
+    ],
+    createdAt: new Date()
+  }
+]);
+
+// NOTES 
+await db.collection('notes').insertMany([
+  {
+    ownerId: u1.insertedId,
+    text: "General productivity note",
+    createdAt: new Date()
+  },
+  {
+    ownerId: u1.insertedId,
+    projectId: p1.insertedId,
+    text: "Schema should support scalability",
+    createdAt: new Date()
+  },
+  {
+    ownerId: u2.insertedId,
+    projectId: p3.insertedId,
+    text: "Use React Native for speed",
+    createdAt: new Date()
+  },
+  {
+    ownerId: u2.insertedId,
+    text: "Ideas for future apps",
+    createdAt: new Date()
+  },
+  {
+    ownerId: u1.insertedId,
+    projectId: p2.insertedId,
+    text: "AI model needs more training data",
+    createdAt: new Date()
+  }
+]);
+console.log("seed done");
 
   console.log('TODO: implement seed.js');
   process.exit(0);
