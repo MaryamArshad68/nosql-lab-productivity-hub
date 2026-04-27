@@ -44,7 +44,10 @@ const { ObjectId } = require('mongodb');
  * Hint: insertOne. Nothing fancy.
  */
 async function signupUser(db, userData) {
-  // TODO: implement
+  return await db.collection("users").insertOne({
+  ...userData,
+  createdAt: new Date()
+});
   throw new Error('signupUser not implemented');
 }
 
@@ -64,7 +67,7 @@ async function signupUser(db, userData) {
  * Hint: findOne with an exact-match filter.
  */
 async function loginFindUser(db, email) {
-  // TODO: implement
+  return await db.collection("users").findOne({ email });
   throw new Error('loginFindUser not implemented');
 }
 
@@ -84,7 +87,13 @@ async function loginFindUser(db, email) {
  * Hint: find with two filter conditions, then .sort().toArray().
  */
 async function listUserProjects(db, ownerId) {
-  // TODO: implement
+  return await db.collection("projects")
+.find({
+  ownerId,
+  archived: false
+})
+.sort({ createdAt: -1 })
+.toArray();
   throw new Error('listUserProjects not implemented');
 }
 
@@ -102,7 +111,11 @@ async function listUserProjects(db, ownerId) {
  * Hint: insertOne again — just remember to add the defaults yourself.
  */
 async function createProject(db, projectData) {
-  // TODO: implement
+  return await db.collection("projects").insertOne({
+  ...projectData,
+  archived: false,
+  createdAt: new Date()
+});
   throw new Error('createProject not implemented');
 }
 
@@ -121,10 +134,19 @@ async function createProject(db, projectData) {
  *
  * Hint: updateOne with the $set operator.
  */
-async function archiveProject(db, projectId) {
-  // TODO: implement
-  throw new Error('archiveProject not implemented');
+let filter = { projectId };
+
+if (status) {
+  filter.status = status;
 }
+
+return await db.collection("tasks")
+.find(filter)
+.sort({
+  priority: -1,
+  createdAt: -1
+})
+.toArray();
 
 /**
  * Query 6: listProjectTasks
@@ -144,7 +166,19 @@ async function archiveProject(db, projectId) {
  *       the caller passed one. Then chain .sort({ priority: -1, createdAt: -1 }).
  */
 async function listProjectTasks(db, projectId, status) {
-  // TODO: implement
+ let filter = { projectId };
+
+if (status) {
+  filter.status = status;
+}
+
+return await db.collection("tasks")
+.find(filter)
+.sort({
+  priority: -1,
+  createdAt: -1
+})
+.toArray();
   throw new Error('listProjectTasks not implemented');
 }
 
