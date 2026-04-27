@@ -45,7 +45,9 @@ const { ObjectId } = require('mongodb');
  */
 async function signupUser(db, userData) {
   return await db.collection("users").insertOne({
-  ...userData,
+  email: userData.email,
+  passwordHash: userData.passwordHash,
+  name: userData.name,
   createdAt: new Date()
 });
 }
