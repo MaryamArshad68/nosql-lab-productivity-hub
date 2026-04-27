@@ -21,10 +21,10 @@ const { connect } = require('./db/connection');
   const db = await connect();
 
   // OPTIONAL: clear existing data so re-seeding is idempotent
-  // await db.collection('users').deleteMany({});
-  // await db.collection('projects').deleteMany({});
-  // await db.collection('tasks').deleteMany({});
-  // await db.collection('notes').deleteMany({});
+  await db.collection('users').deleteMany({});
+  await db.collection('projects').deleteMany({});
+  await db.collection('tasks').deleteMany({});
+  await db.collection('notes').deleteMany({});
 
   // =============================================================================
   //  TODO: Insert your seed data below.
