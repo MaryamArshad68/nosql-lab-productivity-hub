@@ -160,6 +160,6 @@ await db.collection('notes').insertMany([
 ]);
 console.log("seed done");
 
-  console.log('TODO: implement seed.js');
+  console.log('seed.js implemented');
   process.exit(0);
 })();
