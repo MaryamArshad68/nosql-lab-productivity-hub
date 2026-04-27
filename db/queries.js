@@ -48,7 +48,6 @@ async function signupUser(db, userData) {
   ...userData,
   createdAt: new Date()
 });
-  throw new Error('signupUser not implemented');
 }
 
 /**
@@ -68,7 +67,6 @@ async function signupUser(db, userData) {
  */
 async function loginFindUser(db, email) {
   return await db.collection("users").findOne({ email });
-  throw new Error('loginFindUser not implemented');
 }
 
 /**
